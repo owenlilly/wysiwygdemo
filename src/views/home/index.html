@@ -1,43 +1,36 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<script src="http://cdn.tinymce.com/4/tinymce.min.js"></script>
-		<script>
-			tinymce.init({ 
-				selector:'textarea',
-				menubar: false,
-				plugins: [
-					'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-					'searchreplace wordcount visualblocks visualchars code fullscreen',
-					'insertdatetime media nonbreaking save table contextmenu directionality',
-					'emoticons template paste textcolor colorpicker textpattern imagetools spellchecker'
-				],
-				toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-				toolbar2: 'print preview spellchecker | forecolor backcolor emoticons | link image media',
-				image_advtab: true
-			});
-		</script>
-	</head>
-	<body>
-		<textarea id="editor"></textarea>
-		<button id="publish">Publish</button>
-		
-    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
-		<script>
-			$(document).ready(function(){
-				// do jQuery
+<% layout('_layout') -%>
 
-				$('#publish').click(function(e){
-					// Get the HTML contents of the currently active editor
-					console.debug(tinyMCE.activeEditor.getContent());
+<textarea id="editor"></textarea>
+<button id="publish">Publish</button>
 
-					// Get the raw contents of the currently active editor
-					console.log(tinyMCE.activeEditor.getContent({format : 'raw'}));
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+<script src="http://cdn.tinymce.com/4/tinymce.min.js"></script>
+<script>
+	tinymce.init({ 
+		selector:'textarea',
+		menubar: false,
+		plugins: [
+			'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+			'searchreplace wordcount visualblocks visualchars code fullscreen',
+			'insertdatetime media nonbreaking save table contextmenu directionality',
+			'emoticons template paste textcolor colorpicker textpattern imagetools spellchecker'
+		],
+		toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+		toolbar2: 'print preview spellchecker | forecolor backcolor emoticons | link image media',
+		image_advtab: true
+	});
+	$(document).ready(function(){
+		// do jQuery
 
-					// Get content of a specific editor:
-					console.log(tinyMCE.get('editor').getContent());
-				});
-			});
-		</script>
-	</body>
-</html>
+		$('#publish').click(function(e){
+			// Get the HTML contents of the currently active editor
+			console.debug(tinyMCE.activeEditor.getContent());
+
+			// Get the raw contents of the currently active editor
+			console.log(tinyMCE.activeEditor.getContent({format : 'raw'}));
+
+			// Get content of a specific editor:
+			console.log(tinyMCE.get('editor').getContent());
+		});
+	});
+</script>

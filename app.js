@@ -1,7 +1,7 @@
 require('app-module-path').addPath(`${__dirname}/`);
 
 const express    = require('express'),
-      engine     = require('ejs-locals'),
+      engine     = require('ejs-mate'),
 	  ejs        = require('ejs'),
 	  app        = express(),
 	  bodyParser = require('body-parser'),
@@ -10,7 +10,7 @@ const express    = require('express'),
 // setup view engine
 app.set('views', `${__dirname}/src/views`);
 app.set('view engine', 'html');
-app.engine('html', ejs.renderFile);
+app.engine('html', engine);
 
 // setup middlewares
 app.use(bodyParser.json());
