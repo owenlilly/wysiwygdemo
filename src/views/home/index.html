@@ -1,77 +1,38 @@
 <% layout('_layout') -%>
 
 <div ng-controller="mainController as vm">
-	 <div class="card">
-		<div class="meta">
-			<img src="/img/pic-placeholder.png" class="circular profilepic" style="float: left;">
-			<div class="whowhen">
-				<a href="/">John Doe</a>
-				<br style="maring: 0px;" />
-				<span>3 days ago</span>
+	<md-toolbar>
+		<div>
+			<div class="md-toolbar-tools">
+				<md-button class="md-icon-button" aria-label="Settings">
+					<md-icon md-svg-icon="menu"></md-icon>
+				</md-button>
+				<h2><span>Toolbar</span></h2>
+				<span flex></span>
+				<md-button class="md-icon-button" aria-label="Favorite">
+					<md-icon md-svg-icon="search" style="color: greenyellow;"></md-icon>
+				</md-button>
+				<md-button class="md-icon-button" aria-label="More">
+					<md-icon md-svg-icon="more_vert" style="color: white;"></md-icon>
+				</md-button>
 			</div>
 		</div>
-		<br style="margin: 0px;"/>
-		<h2 style="margin-top: 40px;">
-			Some Title
-		</h2>
-		<p>
-			Some raltively short summary of the article in question...
-		</p>
-	 </div>
+	</md-toolbar>
+	
+	<md-tabs md-border-bottom class="md-primary">
+		<md-tab label="Popular">
+			<md-content layout-padding>
+				<h2>Popular</h2>
 
-	 <div class="card">
-		<div class="meta">
-			<img src="/img/pic-placeholder.png" class="circular profilepic" style="float: left;">
-			<div class="whowhen">
-				<a href="/">John Doe</a>
-				<br style="maring: 0px;" />
-				<span>3 days ago</span>
-			</div>
-		</div>
-		<br style="margin: 0px;"/>
-		<h2 style="margin-top: 40px;">
-			Some Title
-		</h2>
-		<p>
-			Some raltively short summary of the article in question...
-		</p>
-	 </div>
-
-	 <div class="card">
-		<div class="meta">
-			<img src="/img/pic-placeholder.png" class="circular profilepic" style="float: left;">
-			<div class="whowhen">
-				<a href="/">John Doe</a>
-				<br style="maring: 0px;" />
-				<span>3 days ago</span>
-			</div>
-		</div>
-		<br style="margin: 0px;"/>
-		<h2 style="margin-top: 40px;">
-			Some Title
-		</h2>
-		<p>
-			Some raltively short summary of the article in question...
-		</p>
-	 </div>
-
-	 <div class="card">
-		<div class="meta">
-			<img src="/img/pic-placeholder.png" class="circular profilepic" style="float: left;">
-			<div class="whowhen">
-				<a href="/">John Doe</a>
-				<br style="maring: 0px;" />
-				<span>3 days ago</span>
-			</div>
-		</div>
-		<br style="margin: 0px;"/>
-		<h2 style="margin-top: 40px;">
-			Some Title
-		</h2>
-		<p>
-			Some raltively short summary of the article in question...
-		</p>
-	 </div>
+			</md-content>
+		</md-tab>
+		<md-tab label="What's New">
+			<md-content layout-padding>
+				<h2>What's New</h2>
+				
+			</md-content>
+		</md-tab>
+</md-tabs>
 </div>
 
 <% block('scripts').append('<script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>') %>
