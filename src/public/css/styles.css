@@ -1,0 +1,52 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #f0f0f0;
+}
+
+img.circular {
+    border-radius: 50px;
+    width: 50px;
+    height: 50px; 
+}
+
+ul.navmenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+ul.navmenu li {
+    float: left;
+}
+
+ul.navmenu li a {
+    display: inline-block;
+    color: #777777;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+ul.navmenu li a:hover {
+    color: #333333;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #e1e1e1;
+    margin: 0px;
+    margin-top: 20px;
+    padding: 16px;
+    position: relative;
+}
+
+.card .profilepic {
+    float: left;
+}
+
+.card .whowhen {
+    float: left;
+    margin-top: 4px;
+    margin-left: 16px;
+}

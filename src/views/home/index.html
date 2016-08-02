@@ -1,36 +1,78 @@
 <% layout('_layout') -%>
 
-<textarea id="editor"></textarea>
-<button id="publish">Publish</button>
+<div ng-controller="mainController as vm">
+	 <div class="card">
+		<div class="meta">
+			<img src="/img/pic-placeholder.png" class="circular profilepic" style="float: left;">
+			<div class="whowhen">
+				<a href="/">John Doe</a>
+				<br style="maring: 0px;" />
+				<span>3 days ago</span>
+			</div>
+		</div>
+		<br style="margin: 0px;"/>
+		<h2 style="margin-top: 40px;">
+			Some Title
+		</h2>
+		<p>
+			Some raltively short summary of the article in question...
+		</p>
+	 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
-<script src="http://cdn.tinymce.com/4/tinymce.min.js"></script>
-<script>
-	tinymce.init({ 
-		selector:'textarea',
-		menubar: false,
-		plugins: [
-			'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-			'searchreplace wordcount visualblocks visualchars code fullscreen',
-			'insertdatetime media nonbreaking save table contextmenu directionality',
-			'emoticons template paste textcolor colorpicker textpattern imagetools spellchecker'
-		],
-		toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-		toolbar2: 'print preview spellchecker | forecolor backcolor emoticons | link image media',
-		image_advtab: true
-	});
-	$(document).ready(function(){
-		// do jQuery
+	 <div class="card">
+		<div class="meta">
+			<img src="/img/pic-placeholder.png" class="circular profilepic" style="float: left;">
+			<div class="whowhen">
+				<a href="/">John Doe</a>
+				<br style="maring: 0px;" />
+				<span>3 days ago</span>
+			</div>
+		</div>
+		<br style="margin: 0px;"/>
+		<h2 style="margin-top: 40px;">
+			Some Title
+		</h2>
+		<p>
+			Some raltively short summary of the article in question...
+		</p>
+	 </div>
 
-		$('#publish').click(function(e){
-			// Get the HTML contents of the currently active editor
-			console.debug(tinyMCE.activeEditor.getContent());
+	 <div class="card">
+		<div class="meta">
+			<img src="/img/pic-placeholder.png" class="circular profilepic" style="float: left;">
+			<div class="whowhen">
+				<a href="/">John Doe</a>
+				<br style="maring: 0px;" />
+				<span>3 days ago</span>
+			</div>
+		</div>
+		<br style="margin: 0px;"/>
+		<h2 style="margin-top: 40px;">
+			Some Title
+		</h2>
+		<p>
+			Some raltively short summary of the article in question...
+		</p>
+	 </div>
 
-			// Get the raw contents of the currently active editor
-			console.log(tinyMCE.activeEditor.getContent({format : 'raw'}));
+	 <div class="card">
+		<div class="meta">
+			<img src="/img/pic-placeholder.png" class="circular profilepic" style="float: left;">
+			<div class="whowhen">
+				<a href="/">John Doe</a>
+				<br style="maring: 0px;" />
+				<span>3 days ago</span>
+			</div>
+		</div>
+		<br style="margin: 0px;"/>
+		<h2 style="margin-top: 40px;">
+			Some Title
+		</h2>
+		<p>
+			Some raltively short summary of the article in question...
+		</p>
+	 </div>
+</div>
 
-			// Get content of a specific editor:
-			console.log(tinyMCE.get('editor').getContent());
-		});
-	});
-</script>
+<% block('scripts').append('<script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>') %>
+<% block('scripts').append('<script src="/js/controllers/mainController.js"></script>') %>
