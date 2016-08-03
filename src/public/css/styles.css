@@ -9,6 +9,29 @@ img.circular {
     height: 50px; 
 }
 
+ul.account {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+}
+
+ul.account li {
+    float: left;
+}
+
+ul.account li a {
+    display: inline-block;
+    color: #777777;
+    text-align: center;
+    padding: 14px 8px;
+    text-decoration: none;
+}
+
+ul.account li a:hover {
+    color: #333333;
+}
+
 ul.navmenu {
     list-style-type: none;
     margin: 0;
