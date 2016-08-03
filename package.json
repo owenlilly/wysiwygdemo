@@ -15,7 +15,9 @@
     "ejs-locals": "^1.0.2",
     "ejs-mate": "^2.3.0",
     "express": "^4.14.0",
-    "rxmongo": "^0.2.1"
+    "express-session": "^1.14.0",
+    "rx": "^4.1.0",
+    "rxmongo": "^0.4.0"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
