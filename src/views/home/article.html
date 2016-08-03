@@ -1,0 +1,14 @@
+<% layout('_layout') -%>
+
+<div ng-controller="articleController as vm">
+    <div class="row">
+        <div class="col-md-9">
+            <div ng-bind-html="vm.article"></div>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+</div>
+
+<% block('scripts').append('<script src="/js/controllers/articleController.js"></script>') %>
