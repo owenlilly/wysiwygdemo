@@ -1,8 +1,6 @@
 require('app-module-path').addPath(`${__dirname}/`);
 
 const express    = require('express'),
-      engine     = require('ejs-mate'),
-	  ejs        = require('ejs'),
 	  app        = express(),
 	  bodyParser = require('body-parser'),
       session    = require('express-session'),
@@ -21,8 +19,7 @@ var store = new MongoDBStore({
 
 // setup view engine
 app.set('views', `${__dirname}/src/views`);
-app.set('view engine', 'html');
-app.engine('html', engine);
+app.set('view engine', 'pug');
 
 // setup middlewares
 app.use(bodyParser.json());

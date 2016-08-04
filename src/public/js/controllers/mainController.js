@@ -3,11 +3,14 @@ mainApp.controller('mainController', function($sce) {
 
     self.editorReady = false;
 	self.articles = [];
+	self.sideItems = [];
 
     var init = function(){
         // setupTinyMce('div.editable');
         // self.editorReady = true;
 		setupMockArticles();
+		setupMockSideItems();
+		console.log(self.sideItems[0]);
     };
 
 	var setupMockArticles = function(){
@@ -20,6 +23,12 @@ mainApp.controller('mainController', function($sce) {
 		self.articles.push(new Article('Bryan Deluce', '3 days ago', 'Understanding Flexi-Workweek', $sce.trustAsHtml(loremIpsum)));
 	};
 
+	var setupMockSideItems = function(){
+		self.sideItems.push(new SideItem('Our Picks', 'Topics worth talking about.', ['First', 'Second', 'Third']));
+		self.sideItems.push(new SideItem('Recommended', 'Topics you might like.', ['First', 'Second', 'Third']));
+		self.sideItems.push(new SideItem('Popular Tags', 'Tags other users seem to like.', ['First', 'Second', 'Third']));
+	};
+
     init();
 });
 
@@ -28,6 +37,14 @@ var loremIpsum = '<p>Lorem ipsum dolor sit amet, quaerendum scribentur consectet
 'id. Ex nec justo doctus. Natum debet expetendis his ut, sit posse platonem ne, an nec dolor splendide contentiones.</p>' +
 '<p>Quidam persecuti ne nam. Ex ferri habemus pri. Ne melius atomorum vim, sensibus efficiantur necessitatibus no sed, '+ 
 'reque facilis comprehensam no per. Ut iuvaret detracto vel, in mel blandit gubergren. Usu deserunt antiopam no, ex nam primis aperiam...</p>'
+
+var SideItem = function(title, desc, options){
+	return {
+		title: title,
+		desc: desc,
+		options: options
+	};
+}
 
 var Article = function(who, when, title, preview){
 	return {
