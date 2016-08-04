@@ -1,6 +1,11 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background: #f0f0f0;
+    background: #fafafa;
+}
+
+.header {
+    background: #ffffff; 
+    border-bottom: 1px solid rgba(220,220,220, 0.6);
 }
 
 img.circular {
@@ -57,11 +62,10 @@ ul.navmenu li a:hover {
 
 .card {
     background: #ffffff;
-    border: 1px solid #e1e1e1;
+    border: 1px solid rgba(220,220,220, 0.6);
     margin: 0px;
     margin-top: 20px;
     padding: 16px;
-    position: relative;
 }
 
 .card .profilepic {

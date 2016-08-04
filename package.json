@@ -11,11 +11,13 @@
   "dependencies": {
     "app-module-path": "^1.1.0",
     "body-parser": "^1.15.2",
+    "connect-mongodb-session": "^1.1.1",
     "ejs": "^2.5.1",
     "ejs-locals": "^1.0.2",
     "ejs-mate": "^2.3.0",
     "express": "^4.14.0",
     "express-session": "^1.14.0",
+    "pug": "^2.0.0-beta4",
     "rx": "^4.1.0",
     "rxmongo": "^0.4.0"
   },
