@@ -1,0 +1,28 @@
+extends ./../_layout.pug
+
+block content
+	div(ng-controller='mainController as vm')
+		div.row
+			div.col-md-9
+				div.card(ng-repeat='article in vm.articles')
+					div.meta
+						img.circular.profilepic(src='/img/pic-placeholder.png', style='float: left;')
+						div.whowhen
+							a(href='/') {{article.who}}
+							br(style='maring: 0px;')
+							span {{article.when}}
+					br(style='margin: 0px;')
+					h2(style='margin-top: 40px;') {{article.title}}
+					div(style='color: #5f5f5f', ng-bind-html='article.preview')
+			div.col-md-3
+				div(style='margin-top: 20px;', ng-repeat='sideItem in vm.sideItems')
+					span(style='color: #7f7f7f; font-weight: 300;') {{sideItem.title}}
+					br
+					span(style='margin-bottom: 5px; display: block; font-weight: 300; font-style: italic') {{sideItem.desc}}
+					hr(style='clear: left; margin: 0px; border-top: 1px solid #e1e1e1;')
+					ul(style='padding: 10px 20px;')
+						li(ng-repeat='opt in sideItem.options') {{opt}}
+
+block scripts
+	script(src='https://cdn.tinymce.com/4/tinymce.min.js')
+	script(src='/js/controllers/mainController.js')

@@ -1,0 +1,36 @@
+doctype html
+html(lang='en')
+  head
+    title= title
+
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    link(href='/libs/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
+    link(href='/css/styles.css', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic', rel='stylesheet', type='text/css')
+
+    script(src='/libs/angular/angular.min.js')
+    script(src='/js/app.js')
+
+  body(ng-app='mainApp', ng-cloak)
+    div.header
+      div.container
+        header
+          a(href='/', class='navbar-brand') Wysiwyg Demo
+          div.pull-right
+            ul.account
+              li: a(href='/account/login') login
+              li: a(href='/account/register') register
+    
+        hr(style='clear: left; margin: 0px;')
+        ul.navmenu(style='clear: left;')
+          li(role='presentation'): a(href='#') Popular
+          li(role='presentation'): a(href='#') Trending
+          li(role='presentation'): a(href='#') What's New
+
+    div.container
+      block content
+
+    script(src='/libs/jquery/dist/jquery.js')
+    script(src='/libs/bootstrap/dist/js/bootstrap.js')
+    block scripts

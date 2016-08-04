@@ -1,0 +1,18 @@
+extends ./../_layout.pug
+
+block content
+    div.row
+        div.col-md-offset-4.col-md-4
+            div.card
+                h1.text-center Register
+                form.form(action='/account/register', method='post', style='margin-top: 20px;')
+                    div.form-group
+                        input.form-control(type='text', name='username', placeholder='username')
+                    div.form-group
+                        input.form-control(type='email', name='email', placeholder='email')
+                    div.form-group
+                        input.form-control(type='password', name='password', placeholder='password')
+                    div.form-group
+                        input.form-control(type='password', name='password2', placeholder='confirm password')
+                    div.form-group
+                        input.btn.btn-primary.form-control(type='submit', value='Register')
