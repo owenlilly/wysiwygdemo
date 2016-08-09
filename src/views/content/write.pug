@@ -1,0 +1,20 @@
+extends ./../_layout.pug
+
+block content
+    div(ng-controller='contentController as vm')
+        div.row
+            div.col-md-offset-2.col-md-8
+                h1.editor(ui-tinymce="vm.tinymceTopicOptions", 
+                    | ng-model="vm.topic", data-placeholder="Topic..." id="post-content-editor")
+                br
+
+                div.editor.big(ui-tinymce="vm.tinymceStoryOptions", 
+                    | ng-model="vm.story", data-placeholder="Story..." id="post-content-editor")
+                br
+                button.btn.btn-default.pull-right(ng-click='vm.publish()') Publish
+
+block scripts
+    script(src='/libs/rxjs/dist/rx.js')
+    script(src='/libs/rxjs/dist/rx.time.js')
+    script(src='/js/services/story.js')
+    script(src='/js/controllers/contentController.js')

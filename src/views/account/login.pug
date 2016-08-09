@@ -5,10 +5,10 @@ block content
         div.col-md-offset-4.col-md-4
             div.card
                 h1.text-center Login
-                form(action='/account/login', method='post', style='display: block; margin-top: 20px;')
-                .form-group
-                    input.form-control(type='text', name='username', placeholder='username')
-                .form-group
-                    input.form-control(type='password', name='password', placeholder='password')
-                .form-group
-                    input.form-control.btn.btn-primary(type='submit', value='Login')
+                form(action='/account/login'+next, method='post', style='display: block; margin-top: 20px;')
+                    div.form-group
+                        input.form-control(type='text', name='username', placeholder='username')
+                    div.form-group
+                        input.form-control(type='password', name='password', placeholder='password')
+                    div.form-group
+                        input.form-control.btn.btn-primary(type='submit', value='Login')

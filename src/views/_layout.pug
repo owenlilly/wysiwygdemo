@@ -10,6 +10,8 @@ html(lang='en')
     link(href='https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic', rel='stylesheet', type='text/css')
 
     script(src='/libs/angular/angular.min.js')
+    script(src='/libs/tinymce-dist/tinymce.js')
+    script(src='/libs/angular-ui-tinymce/src/tinymce.js')
     script(src='/js/app.js')
 
   body(ng-app='mainApp', ng-cloak)
@@ -18,9 +20,22 @@ html(lang='en')
         header
           a(href='/', class='navbar-brand') Wysiwyg Demo
           div.pull-right
-            ul.account
-              li: a(href='/account/login') login
-              li: a(href='/account/register') register
+              if(!isAuthenticated)
+                ul.account
+                  li: a(href='/account/login') login
+                  li: a(href='/account/register') register
+              else
+                ul.account-signedin
+                  li: a(href='/u/write') Write a story
+                  li.dropdown
+                    a#dropdownMenu1.dropdown-toggle(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true') #{username}
+                      span.caret
+                      ul.dropdown-menu(aria-labelledby='dropdownMenu1')
+                        li: a(href='/u/write') Write a story
+                        li: a(href='#') Profile
+                        li: a(href='#') Account
+                        li.divider(role='separator')
+                        li: a(href='/account/logout') Logout
     
         hr(style='clear: left; margin: 0px;')
         ul.navmenu(style='clear: left;')

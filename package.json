@@ -11,9 +11,11 @@
   "dependencies": {
     "app-module-path": "^1.1.0",
     "body-parser": "^1.15.2",
+    "bottlejs": "^1.4.0",
     "connect-mongodb-session": "^1.1.1",
     "express": "^4.14.0",
     "express-session": "^1.14.0",
+    "mongodb": "^2.2.5",
     "pug": "^2.0.0-beta4",
     "rx": "^4.1.0",
     "rxmongo": "^0.4.0"

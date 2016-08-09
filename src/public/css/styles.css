@@ -14,11 +14,31 @@ img.circular {
     height: 50px; 
 }
 
+ul.account-signedin {
+    list-style-type: none;
+}
+
+ul.account-signedin > li {
+    float: left;
+}
+
+ul.account-signedin > li > a:hover {
+    color: #333333;
+}
+
+ul.account-signedin > li > a {
+    display: inline-block;
+    color: #777777;
+    text-align: center;
+    padding: 14px 8px;
+    text-decoration: none;
+}
+
 ul.account {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    overflow: hidden; 
+    position: relative;
 }
 
 ul.account li {
@@ -76,4 +96,25 @@ ul.navmenu li a:hover {
     float: left;
     margin-top: 4px;
     margin-left: 16px;
+}
+
+.editor {
+    background: rgba(255, 255, 255, .8);
+    border: 1px dotted rgba(0,0,0,.1);
+    padding: 5px;
+}
+
+.editor.big {
+    min-height: 300px;
+}
+
+.content-editorr:before {
+    display: none;
+}
+
+.content-editor.empty:before {
+    color: rgba(0, 0, 0, .3);
+    display: block;
+    position: absolute;
+    content: attr(data-placeholder);
 }

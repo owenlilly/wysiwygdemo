@@ -65,13 +65,23 @@ router
     }
     const responseObj = new Response(false, '', 'Login');
     responseObj.username = '';
+    if(req.query.next){
+        responseObj.next = `?next=${req.query.next}`;
+    } else {
+        responseObj.next = '';
+    }
 
     res.render('account/login', responseObj);
     next();
 })
 .post('/login', (req, res, next) => {
+    const qs = req.query;
     if(req.session.username){
-        res.redirect('/');
+        if(qs.next){
+            res.redirect(qs.next);
+        } else {
+            res.redirect('/');
+        }
         next();
         return;
     }
@@ -85,7 +95,11 @@ router
                 .subscribe(user => {
                     if(user.length > 0){
                         req.session.username = req.body.username;
-                        res.redirect('/');
+                        if(qs.next){
+                            res.redirect(qs.next);
+                        } else {
+                            res.redirect('/');
+                        }
                     } else {
                         responseObj.hasError = true;
                         responseObj.message = 'Invalid username or password';

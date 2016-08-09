@@ -5,9 +5,10 @@ const express    = require('express'),
 	  bodyParser = require('body-parser'),
       session    = require('express-session'),
       RxMongo    = require('rxmongo'),
-	  homeController = require('src/controllers/home/HomeController'),
-	  accountController = require('src/controllers/account/AccountController'),
-	  articleController = require('src/controllers/home/ArticleController'),
+	  homeController = require('src/controllers/HomeController'),
+	  accountController = require('src/controllers/AccountController'),
+	  contentController = require('src/controllers/ContentController'),
+      contentApiController = require('src/webapi/contentApiController'),
       MongoDBStore = require('connect-mongodb-session')(session);
 
 const mongoUrl = 'mongodb://localhost/findit';
@@ -39,7 +40,10 @@ app.use(session({
 // controllers
 app.use('/', homeController);
 app.use('/account', accountController);
-app.use('/u', articleController);
+app.use('/u', contentController);
+
+// APIs
+app.use('/api', contentApiController);
 
 // error handler
 app.use((err, req, res, next) => {

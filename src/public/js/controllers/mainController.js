@@ -1,16 +1,27 @@
-mainApp.controller('mainController', function($sce) {
+mainApp.controller('mainController', function($sce, story) {
     var self = this;
 
-    self.editorReady = false;
 	self.articles = [];
 	self.sideItems = [];
 
     var init = function(){
-        // setupTinyMce('div.editable');
-        // self.editorReady = true;
-		setupMockArticles();
 		setupMockSideItems();
 		console.log(self.sideItems[0]);
+
+		story.listSamples()
+			.flatMap(function(respose){
+				return Rx.Observable.from(respose.data);
+			})
+			.map(function(stry){
+				return new Article(stry.username, moment(stry.datePublished, moment.ISO_8601).fromNow(), 
+									stry.topic, stry.summary);
+			})
+			.subscribe(function(article){
+				console.log(article);
+				self.articles.push(article);
+			}, function(error){
+				console.log(error);
+			});
     };
 
 	var setupMockArticles = function(){
@@ -54,20 +65,3 @@ var Article = function(who, when, title, preview){
 		preview: preview
 	};
 }
-
-var setupTinyMce = function(selector){
-    tinymce.init({ 
-		selector: selector,
-		menubar: false,
-        inline: true,
-		plugins: [
-			"advlist autolink lists link image charmap print preview hr anchor pagebreak",
-			"searchreplace wordcount visualblocks visualchars code fullscreen",
-			"insertdatetime media nonbreaking save table contextmenu directionality",
-			"emoticons template paste textcolor colorpicker textpattern imagetools spellchecker"
-		],
-		toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
-		toolbar2: "print preview spellchecker | forecolor backcolor emoticons | link image media",
-		image_advtab: true
-	});
-};
