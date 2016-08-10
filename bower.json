@@ -1,0 +1,26 @@
+{
+  "name": "wysiwygdemo",
+  "description": "",
+  "main": "server.js",
+  "authors": [
+    "Owen Lilly"
+  ],
+  "license": "Apache",
+  "homepage": "https://github.com/owenlilly/wysiwygdemo",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/public/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material-icons": "^0.7.1",
+    "angular-ui-tinymce": "^0.0.16",
+    "bootstrap": "^3.3.7",
+    "moment": "^2.14.1",
+    "rxjs": "^4.1.0"
+  }
+}
