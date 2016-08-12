@@ -13,10 +13,10 @@ const express    = require('express'),
 
 const mongoUrl = 'mongodb://localhost/findit';
 
-var store = new MongoDBStore({ 
-        uri: mongoUrl,
-        collection: 'Sessions'
-      });
+const store = new MongoDBStore({ 
+    uri: mongoUrl,
+    collection: 'Sessions'
+});
 
 // setup view engine
 app.set('views', `${__dirname}/src/views`);
