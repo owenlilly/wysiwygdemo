@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const RxMongo = require('rxmongo');
 const Rx = require('rx');
-const ObjectID = require('mongodb').ObjectID
+const ObjectID = require('mongodb').ObjectID;
+const sanitizeHtml = require('sanitize-html');
 
 router
 .post('/story/publish', (req, res, next) => {
@@ -14,18 +15,22 @@ router
 
     const username = sess.username;
     const body = req.body;
+    const now = new Date(); 
 
     body.username = username;
-    body.datePublished = new Date();
+    body.datePublished = now;
     body.isDraft = false;
+    body.storyId = `${body.topic.toLowerCase().replace(new RegExp(' ', 'g'), '-')}-${body._id.slice(-4)}`;
 
     const collection = RxMongo.collection('Stories');
     const rxUpdate = collection.flatMap(coll => RxMongo.updateOne(coll, {_id: ObjectID(body._id), username: username}, {$set: {
         isDraft: body.isDraft,
         datePublished: body.datePublished,
         topic: body.topic,
-        story: body.story,
-        username: body.username
+        story: sanitizeHtml(body.story),
+        username: body.username,
+        storyId: body.storyId,
+        lastUpdated: now
     }}));
 
     rxUpdate.subscribe(result => {
@@ -53,7 +58,7 @@ router
     const rxUpdate = collection.flatMap(coll => RxMongo.updateOne(coll, {_id: ObjectID(body._id), username: username}, {$set: {
         isDraft: body.isDraft,
         topic: body.topic,
-        story: body.story
+        story: sanitizeHtml(body.story)
     }}));
 
     if(!body._id){
@@ -94,7 +99,8 @@ router
                 topic: 1,
                 summary: {$substr: ['$story', 0, 500]},
                 username: 1,
-                datePublished: 1
+                datePublished: 1,
+                storyId: 1
             }
         },
         { $sort: { datePublished: -1 } }
@@ -110,7 +116,6 @@ router
     
     rxStripHtmlTags.subscribe(
         stories => {
-            console.log(stories);
             res.json(stories);
         },
         error => {
@@ -120,7 +125,6 @@ router
     );
 })
 .get('/story/:storyId', (req, res, next) => {
-
     res.json({type: 'single', storyId: req.params.storyId});
     next();
 });

@@ -30,6 +30,9 @@ mainApp.factory('story', function($http){
         },
         listSamples: function(){
             return rxGet('/api/story');
+        },
+        getStory: function(username, storyId){
+            return rxGet('/'+username+'/'+storyId);
         }
     };
 });
