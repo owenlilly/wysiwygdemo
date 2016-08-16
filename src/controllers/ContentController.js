@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const RxMongo = require('rxmongo');
+const RxMongo = require('rxmongo').RxMongo;
+const StoryService = require('src/services/StoryService');
 
 class Response {
     constructor(title, isAuthenticated, username){
@@ -25,11 +26,26 @@ router
     res.render('content/write', response);
     next();
 })
-.get('/v/:username', (req, res, next) => {
-    res.send(`${req.params.username}: ${req.params.article_id}`);
-    next();
+.get('/@+:username', (req, res, next) => {
+    const username = req.params.username;
+    const response = new Response(username, false, '');
+    const storyService = new StoryService();
+
+    storyService.getStories(username)
+                .subscribe(stories => {
+                    if(stories.length < 1){
+                        res.status(404).json({error: 'story not found'});
+                    } else {
+                        response.data = stories;
+                        res.render('content/user', response);
+                    }
+                },
+                error => {
+                    res.status(500).json({error: error});
+                },
+                () => next());
 })
-.get('/v/:username/:storyId', (req, res, next) => {
+.get('/@+:username/:storyId', (req, res, next) => {
     const response = new Response('Read', false, '');
 
     let sess = req.session;
@@ -41,25 +57,24 @@ router
 
     const username = req.params.username;
     const storyId = req.params.storyId;
-
-    const rxCollection = RxMongo.collection('Stories');
-    rxCollection.flatMap(coll => RxMongo.find(coll, {username: username, storyId: storyId}))
-                .flatMap(cursor => RxMongo.toArray(cursor))
-                .subscribe(stories => {
-                    if(stories.length < 1){
-                        res.status(404).json({error: 'story not found'});
-                    } else {
-                        const story = stories[0];
-                        response.data = story;
-                        response.title = story.topic;
-
-                        res.render('content/read', response);
-                    }
-                }, 
-                error => {
-                    res.status(500).json({error: error});
-                },
-                () => next());
+    const onNext = (story) => {
+        if(!story){
+            res.status(404).json({error: 'story not found'});
+        } else {
+            response.data = story;
+            response.title = story.topic;
+            res.render('content/read', response);
+        }
+    }
+    const onError = (error) => {
+        res.status(500).json({error: error});
+    }
+    
+    const storyService = new StoryService();
+    storyService.getStory(username, storyId)
+                .subscribe(story => onNext(story),
+                            error => onError(error),
+                            () => next());
 });
 
 module.exports = router;
