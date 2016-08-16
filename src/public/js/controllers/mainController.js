@@ -4,6 +4,10 @@ mainApp.controller('mainController', function($sce, story) {
 	self.articles = [];
 	self.sideItems = [];
 
+	self.getUserStoryPreviews = function(){
+		
+	}
+
     var init = function(){
 		setupMockSideItems();
 		console.log(self.sideItems[0]);
@@ -13,7 +17,7 @@ mainApp.controller('mainController', function($sce, story) {
 				return Rx.Observable.from(response.data);
 			})
 			.map(function(stry){
-				stry.url = stry.storyId ? '/u/v/'+stry.username+'/'+stry.storyId : '#';
+				stry.url = stry.storyId ? '/@'+stry.username+'/'+stry.storyId : '#';
 				stry.datePublished = moment(stry.datePublished, moment.ISO_8601).fromNow();
 				return stry;
 			})
@@ -35,6 +39,11 @@ mainApp.controller('mainController', function($sce, story) {
 	};
 
     init();
+})
+.directive('articles', function() {
+  return {
+    templateUrl: 'js/directives/articles.html'
+  };
 });
 
 var loremIpsum = '<p>Lorem ipsum dolor sit amet, quaerendum scribentur consectetuer quo te, vel falli doming no. '+ 

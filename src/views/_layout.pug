@@ -26,12 +26,12 @@ html(lang='en')
                   li: a(href='/account/register') register
               else
                 ul.account-signedin
-                  li: a(href='/u/write') Write a story
+                  li: a(href='/write') Write a story
                   li.dropdown
                     a#dropdownMenu1.dropdown-toggle(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true') #{username}
                       span.caret
                       ul.dropdown-menu(aria-labelledby='dropdownMenu1')
-                        li: a(href='/u/write') Write a story
+                        li: a(href='/write') Write a story
                         li: a(href='#') Profile
                         li: a(href='#') Account
                         li.divider(role='separator')

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const RxMongo = require('rxmongo');
+const RxMongo = require('rxmongo').RxMongo;
 const Rx = require('rx');
 
 function isEmpty(str) {

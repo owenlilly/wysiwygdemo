@@ -4,7 +4,7 @@ const express    = require('express'),
 	  app        = express(),
 	  bodyParser = require('body-parser'),
       session    = require('express-session'),
-      RxMongo    = require('rxmongo'),
+      RxMongo    = require('rxmongo').RxMongo,
 	  homeController = require('src/controllers/HomeController'),
 	  accountController = require('src/controllers/AccountController'),
 	  contentController = require('src/controllers/ContentController'),
@@ -39,8 +39,8 @@ app.use(session({
 
 // controllers
 app.use('/', homeController);
+app.use('/', contentController);
 app.use('/account', accountController);
-app.use('/u', contentController);
 
 // APIs
 app.use('/api', contentApiController);
@@ -56,4 +56,5 @@ app.use((err, req, res, next) => {
 // start!
 const port = process.env.PORT || 3000;
 RxMongo.connect(mongoUrl)
-       .subscribe(db => app.listen(port, () => console.log(`running on port ${port}`)));
+       .subscribe(db => app.listen(port, () => console.log(`running on port ${port}`)),
+                    error => console.log(error));
