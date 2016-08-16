@@ -32,11 +32,9 @@ router
         return;
     }
 
-    const username = sess.username;
-    const body = req.body;
     const storyService = new StoryService();
 
-    storyService.saveDraft(username, body)
+    storyService.saveDraft(sess.username, req.body)
         .subscribe(result => {
             res.json(body);
         },
