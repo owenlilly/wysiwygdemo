@@ -18,7 +18,6 @@ mainApp.controller('mainController', function(story) {
 
     var init = function(){
 		Utils.setupMockSideItems(self.sideItems);
-		console.log(self.sideItems[0]);
     };
 
     init();

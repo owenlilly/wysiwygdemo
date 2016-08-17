@@ -27,7 +27,7 @@ router
 })
 .get('/@+:username', (req, res, next) => {
     const username = req.params.username;
-    const response = new Response(username, !!req.session.username, username);
+    const response = new Response(`Writer: ${username}`, !!req.session.username, username);
     const storyService = new StoryService();
 
     storyService.getPreviews({username: username})

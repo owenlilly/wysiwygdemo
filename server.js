@@ -57,4 +57,4 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 RxMongo.connect(mongoUrl)
        .subscribe(db => app.listen(port, () => console.log(`running on port ${port}`)),
-                    error => console.log(error));
+                  error => console.log(error));
