@@ -4,39 +4,20 @@ mainApp.controller('mainController', function($sce, story) {
 	self.articles = [];
 	self.sideItems = [];
 
-	self.getUserStoryPreviews = function(){
-		
+	self.getLatestPreviews = function(){
+		var rxPreviews = story.listSamples();
+		Utils.loadArticlePreviews(rxPreviews, self.articles);
+	}
+
+	self.getPreviewsByUser = function(username){
+		var rxPreviews = story.getPreviews(username);
+		Utils.loadArticlePreviews(rxPreviews, self.articles);
 	}
 
     var init = function(){
-		setupMockSideItems();
+		Utils.setupMockSideItems(self.sideItems);
 		console.log(self.sideItems[0]);
-
-		story.listSamples()
-			.flatMap(function(response){
-				return Rx.Observable.from(response.data);
-			})
-			.map(function(stry){
-				stry.url = stry.storyId ? '/@'+stry.username+'/'+stry.storyId : '#';
-				stry.datePublished = moment(stry.datePublished, moment.ISO_8601).fromNow();
-				return stry;
-			})
-			.map(function(stry){
-				return new Article(stry.username, stry.datePublished, stry.topic, stry.summary, stry.url);
-			})
-			.subscribe(function(article){
-				console.log(article);
-				self.articles.push(article);
-			}, function(error){
-				console.log(error);
-			});
     };
-
-	var setupMockSideItems = function(){
-		self.sideItems.push(new SideItem('Our Picks', 'Topics worth talking about.', ['First', 'Second', 'Third']));
-		self.sideItems.push(new SideItem('Recommended', 'Topics you might like.', ['First', 'Second', 'Third']));
-		self.sideItems.push(new SideItem('Popular Tags', 'Tags other users seem to like.', ['First', 'Second', 'Third']));
-	};
 
     init();
 })
@@ -46,26 +27,54 @@ mainApp.controller('mainController', function($sce, story) {
   };
 });
 
-var loremIpsum = '<p>Lorem ipsum dolor sit amet, quaerendum scribentur consectetuer quo te, vel falli doming no. '+ 
-'Decore repudiandae te sit, no est quas cotidieque. An wisi soluta deterruisset nec, mei labitur legimus scriptorem '+ 
-'id. Ex nec justo doctus. Natum debet expetendis his ut, sit posse platonem ne, an nec dolor splendide contentiones.</p>' +
-'<p>Quidam persecuti ne nam. Ex ferri habemus pri. Ne melius atomorum vim, sensibus efficiantur necessitatibus no sed, '+ 
-'reque facilis comprehensam no per. Ut iuvaret detracto vel, in mel blandit gubergren. Usu deserunt antiopam no, ex nam primis aperiam...</p>'
+var Utils = (function(){
+	var SideItem = function(title, desc, options){
+		return {
+			title: title,
+			desc: desc,
+			options: options
+		};
+	}
 
-var SideItem = function(title, desc, options){
-	return {
-		title: title,
-		desc: desc,
-		options: options
-	};
-}
+	var Article = function(who, when, title, preview, url){
+		return {
+			who: who,
+			when: when,
+			title: title,
+			preview: preview,
+			url
+		};
+	}
 
-var Article = function(who, when, title, preview, url){
-	return {
-		who: who,
-		when: when,
-		title: title,
-		preview: preview,
-		url
+	var setupMockSideItems = function(sideList){
+		sideList.push(new SideItem('Our Picks', 'Topics worth talking about.', ['First', 'Second', 'Third']));
+		sideList.push(new SideItem('Recommended', 'Topics you might like.', ['First', 'Second', 'Third']));
+		sideList.push(new SideItem('Popular Tags', 'Tags other users seem to like.', ['First', 'Second', 'Third']));
 	};
-}
+
+	var loadArticlePreviews = function(rxPreviews, previewList){
+		rxPreviews.flatMap(function(response){
+				return Rx.Observable.from(response.data);
+			})
+			.map(function(story){
+				story.url = story.storyId ? '/@'+story.username+'/'+story.storyId : '#';
+				story.datePublished = moment(story.datePublished, moment.ISO_8601).fromNow();
+				return story;
+			})
+			.map(function(story){
+				return new Article(story.username, story.datePublished, story.topic, story.summary, story.url);
+			})
+			.subscribe(function(article){
+				previewList.push(article);
+			}, function(error){
+				console.log(error);
+			});
+	}
+
+	return {
+		SideItem: SideItem,
+		Article: Article,
+		setupMockSideItems: setupMockSideItems,
+		loadArticlePreviews: loadArticlePreviews
+	}
+})();

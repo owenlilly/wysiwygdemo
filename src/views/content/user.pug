@@ -3,7 +3,7 @@ extends ./../_layout.pug
 block content
 	div(ng-controller='mainController as vm')
 		div.row
-			div.col-md-9(ng-init='')
+			div.col-md-9(ng-init='vm.getPreviewsByUser("'+username+'")')
 				articles(ng-repeat="article in vm.articles")
 
 block scripts

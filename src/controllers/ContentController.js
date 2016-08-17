@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const RxMongo = require('rxmongo').RxMongo;
 const StoryService = require('src/services/StoryService');
 
 class Response {
@@ -28,10 +27,10 @@ router
 })
 .get('/@+:username', (req, res, next) => {
     const username = req.params.username;
-    const response = new Response(username, false, '');
+    const response = new Response(username, !!req.session.username, username);
     const storyService = new StoryService();
 
-    storyService.getStories(username)
+    storyService.getPreviews({username: username})
                 .subscribe(stories => {
                     if(stories.length < 1){
                         res.status(404).json({error: 'story not found'});
