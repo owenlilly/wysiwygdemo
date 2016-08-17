@@ -1,4 +1,4 @@
-mainApp.controller('mainController', function($sce, story) {
+mainApp.controller('mainController', function(story) {
     var self = this;
 
 	self.articles = [];
@@ -6,12 +6,14 @@ mainApp.controller('mainController', function($sce, story) {
 
 	self.getLatestPreviews = function(){
 		var rxPreviews = story.listSamples();
-		Utils.loadArticlePreviews(rxPreviews, self.articles);
+		Utils.loadArticlePreviews(rxPreviews)
+			 .into(self.articles);
 	}
 
 	self.getPreviewsByUser = function(username){
 		var rxPreviews = story.getPreviews(username);
-		Utils.loadArticlePreviews(rxPreviews, self.articles);
+		Utils.loadArticlePreviews(rxPreviews)
+			 .into(self.articles);
 	}
 
     var init = function(){
@@ -52,23 +54,27 @@ var Utils = (function(){
 		sideList.push(new SideItem('Popular Tags', 'Tags other users seem to like.', ['First', 'Second', 'Third']));
 	};
 
-	var loadArticlePreviews = function(rxPreviews, previewList){
-		rxPreviews.flatMap(function(response){
-				return Rx.Observable.from(response.data);
-			})
-			.map(function(story){
-				story.url = story.storyId ? '/@'+story.username+'/'+story.storyId : '#';
-				story.datePublished = moment(story.datePublished, moment.ISO_8601).fromNow();
-				return story;
-			})
-			.map(function(story){
-				return new Article(story.username, story.datePublished, story.topic, story.summary, story.url);
-			})
-			.subscribe(function(article){
-				previewList.push(article);
-			}, function(error){
-				console.log(error);
-			});
+	var loadArticlePreviews = function(rxPreviews){
+		return {
+			into: function(previewList) {
+				rxPreviews.flatMap(function(response){
+						return Rx.Observable.from(response.data);
+					})
+					.map(function(story){
+						story.url = story.storyId ? '/@'+story.username+'/'+story.storyId : '#';
+						story.datePublished = moment(story.datePublished, moment.ISO_8601).fromNow();
+						return story;
+					})
+					.map(function(story){
+						return new Article(story.username, story.datePublished, story.topic, story.summary, story.url);
+					})
+					.subscribe(function(article){
+						previewList.push(article);
+					}, function(error){
+						console.log(error);
+					});
+			}
+		}
 	}
 
 	return {
