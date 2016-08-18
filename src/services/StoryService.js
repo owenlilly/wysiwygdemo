@@ -32,7 +32,7 @@ const StoryService = (function(){
 
     StoryService.prototype.publish = function(username, draft){
         if(!draft._id){
-            throw new Error('cannot publish draft,  _id property required.');
+            throw new Error('cannot publish draft, _id property required.');
         }
 
         const now = new Date();
@@ -47,12 +47,27 @@ const StoryService = (function(){
         const rxUpdate = collection.flatMap(coll => RxMongo.updateOne(coll, query, {$set: {
             isDraft: draft.isDraft,
             datePublished: draft.datePublished,
-            topic: draft.topic,
+            topic: sanitizeHtml(draft.topic),
             story: sanitizeHtml(draft.story),
             username: draft.username,
             storyId: draft.storyId,
             lastUpdated: now
         }}));
+
+        return rxUpdate;
+    }
+
+    StoryService.prototype.update = function(username, updated){        
+        updated.storyId = `${updated.topic.toLowerCase().replace(new RegExp(' ', 'g'), '-')}-${updated._id.slice(-4)}`;
+
+        const updateQuery = {_id: ObjectID(updated._id), username: username};
+        const rxUpdate = this.rxCollection.updateOne(updateQuery, {$set: {
+            isDraft: updated.isDraft,
+            topic: sanitizeHtml(updated.topic),
+            story: sanitizeHtml(updated.story),
+            storyId: updated.storyId,
+            lastUpdated: new Date()
+        }});
 
         return rxUpdate;
     }
@@ -65,7 +80,7 @@ const StoryService = (function(){
         const rxInsert = collection.flatMap(coll => RxMongo.insert(coll, draft));
         const rxUpdate = collection.flatMap(coll => RxMongo.updateOne(coll, updateQuery, {$set: {
             isDraft: draft.isDraft,
-            topic: draft.topic,
+            topic: sanitizeHtml(draft.topic),
             story: sanitizeHtml(draft.story)
         }}));
 
