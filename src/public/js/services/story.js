@@ -23,7 +23,10 @@ mainApp.factory('story', function($http){
         saveDraft: function(story){
             story.isDraft = true;
             return rxPost('/api/story/save-draft', story);
-        }, 
+        },
+        update: function(updates){
+            return rxPost('/api/story/update', updates);
+        },
         publish: function(story){
             story.isDraft = false;
             return rxPost('/api/story/publish', story);
@@ -34,8 +37,14 @@ mainApp.factory('story', function($http){
         getPreviews: function(username){
             return rxGet('/api/story/user/'+username);
         },
+        getById: function(id){
+            return rxGet('/api/story/byid/'+id);
+        },
         getStory: function(username, storyId){
             return rxGet('/@'+username+'/'+storyId);
+        },
+        getDrafts: function(){
+            return rxGet('/api/story/drafts');
         }
     };
 });

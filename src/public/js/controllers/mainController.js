@@ -3,14 +3,23 @@ mainApp.controller('mainController', function(story) {
 
 	self.articles = [];
 	self.sideItems = [];
+	self.username = '';
+
+	self.getDrafts = function(){
+		var rxDrafts = story.getDrafts();
+		Utils.loadArticlePreviews(rxDrafts)
+			 .into(self.articles);
+	}
 
 	self.getLatestPreviews = function(){
+
 		var rxPreviews = story.listSamples();
 		Utils.loadArticlePreviews(rxPreviews)
 			 .into(self.articles);
 	}
 
 	self.getPreviewsByUser = function(username){
+
 		var rxPreviews = story.getPreviews(username);
 		Utils.loadArticlePreviews(rxPreviews)
 			 .into(self.articles);
@@ -37,8 +46,9 @@ var Utils = (function(){
 		};
 	}
 
-	var Article = function(who, when, title, preview, url){
+	var Article = function(id, who, when, title, preview, url){
 		return {
+			id: id,
 			who: who,
 			when: when,
 			title: title,
@@ -65,7 +75,8 @@ var Utils = (function(){
 						return story;
 					})
 					.map(function(story){
-						return new Article(story.username, story.datePublished, story.topic, story.summary, story.url);
+						console.log(story);
+						return new Article(story._id, story.username, story.datePublished, story.topic, story.summary, story.url);
 					})
 					.subscribe(function(article){
 						previewList.push(article);

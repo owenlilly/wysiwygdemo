@@ -2,7 +2,7 @@ extends ./../_layout.pug
 
 block content
 	div(ng-controller='mainController as vm')
-		div.row
+		div.row(ng-init='vm.username="'+username+'"')
 			div.col-md-9(ng-init='vm.getLatestPreviews()')
 				articles(ng-repeat="article in vm.articles")
 			div.col-md-3

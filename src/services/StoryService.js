@@ -25,6 +25,16 @@ const StoryService = (function(){
                     .toArray(); // returns RxArray
     }
 
+    StoryService.prototype.getStoryById = function(id){
+        return this.find({_id: ObjectID(id)})
+                    .single();
+    }
+
+    StoryService.prototype.getByIdAndUsername = function(id, username){
+        return this.find({_id: ObjectID(id), username: username})
+                    .single();
+    }
+
     StoryService.prototype.getStory = function(username, storyId){
         return this.find({username: username, storyId: storyId})
                     .single(); // returns Rx.Observable<T>
@@ -60,14 +70,15 @@ const StoryService = (function(){
     StoryService.prototype.update = function(username, updated){        
         updated.storyId = `${updated.topic.toLowerCase().replace(new RegExp(' ', 'g'), '-')}-${updated._id.slice(-4)}`;
 
+        let prunedUpdates = JSON.parse(JSON.stringify(updated));
+        prunedUpdates.topic = sanitizeHtml(updated.topic);
+        prunedUpdates.story = sanitizeHtml(updated.story);
+        prunedUpdates.storyId = updated.storyId;
+        prunedUpdates.lastUpdated = new Date();
+        delete prunedUpdates._id;
+
         const updateQuery = {_id: ObjectID(updated._id), username: username};
-        const rxUpdate = this.rxCollection.updateOne(updateQuery, {$set: {
-            isDraft: updated.isDraft,
-            topic: sanitizeHtml(updated.topic),
-            story: sanitizeHtml(updated.story),
-            storyId: updated.storyId,
-            lastUpdated: new Date()
-        }});
+        const rxUpdate = this.rxCollection.updateOne(updateQuery, {$set: prunedUpdates});
 
         return rxUpdate;
     }

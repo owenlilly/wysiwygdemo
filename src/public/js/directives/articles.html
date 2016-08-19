@@ -13,5 +13,6 @@
         {{article.preview}}<a href="{{article.url}}">...</a>
     </p>
     <a href="{{article.url}}">more...</a>
+    <a href="/edit/{{article.id}}" ng-show="vm.username==article.who" class="pull-right">Edit</a>
   </div>
 </div>

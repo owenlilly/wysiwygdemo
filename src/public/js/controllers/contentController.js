@@ -1,8 +1,10 @@
-mainApp.controller('contentController', function($sce, $http, story){
+mainApp.controller('contentController', function(story){
     var self = this;
 
+    var changeCount = 0;
     var storyId = undefined;
     var draftSaving = false;
+    var rxChangeNotifier = story.saveDraft;
     var storyProvider = function(){
         return {
             _id: storyId,
@@ -10,11 +12,10 @@ mainApp.controller('contentController', function($sce, $http, story){
             story: self.story
         }
     }
-
     var onInit = function(editor){
         Rx.Observable.create(function(s){
             editor.on('change', function(e){
-                if(!draftSaving){
+                if(!self.saving){
                     s.onNext(e);
                 } else {
                     console.log('debouncing due to draft saving...');
@@ -23,22 +24,41 @@ mainApp.controller('contentController', function($sce, $http, story){
         })
         .debounce(50)
         .filter(function(e){
-            return e.originalEvent && !draftSaving;
+            var filterOut = !!e.originalEvent && !self.saving;
+            console.log('change #: '+ ++changeCount+', filtered out: '+ !filterOut);
+            return filterOut;
         })
         .map(function(e){ return storyProvider(); })
         .flatMap(function(_story){
-            draftSaving = true;
-            return story.saveDraft(_story);
+            self.saving = true;
+            return rxChangeNotifier(_story);
         })
         .subscribe(function(res){
-            draftSaving = false;
+            self.saving = false;
             storyId = res.data._id;
             console.log(res.data);
+        }, function(error){
+            self.saving = false;
+            console.log(error);
         });
     }
 
     self.story = '';
     self.topic = '';
+    self.saving = false;
+
+    self.getStoryById = function(id){
+        storyId = id;
+        rxChangeNotifier = story.update;
+		story.getById(id)
+                .subscribe(function(response){
+                    var s = response.data;
+                    self.topic = s.topic;
+                    self.story = s.story;
+                }, function(err){
+                    console.log(err);
+                });
+	}
 
     self.tinymceTopicOptions = { 
         menubar: false,
@@ -48,7 +68,7 @@ mainApp.controller('contentController', function($sce, $http, story){
         browser_spellcheck : true
     };
 
-    self.tinymceStoryOptions = { 
+    self.tinymceStoryOptions = {
 		menubar: false,
         inline: true,
 		plugins: [
@@ -77,6 +97,20 @@ mainApp.controller('contentController', function($sce, $http, story){
             }
         );
     };
+
+    self.saveUpdates = function(){
+        story.update(storyProvider())
+            .subscribe(
+            function(response){
+                console.log(response.data);
+                window.location = '/';
+            },
+            function(error){
+                console.log('error');
+                console.log(error);
+            }
+        );
+    }
 });
 
 var placeholderFunc = function(onInit){
@@ -88,6 +122,8 @@ var placeholderFunc = function(onInit){
             // I add my own class on init
             // this also sets the empty class on the editor on init
             tinymce.DOM.addClass(editor.bodyElement, 'content-editor empty' );
+            
+            refreshPlaceholder();
 
             onInit(editor);
         });
@@ -97,11 +133,15 @@ var placeholderFunc = function(onInit){
         // the selectionchange event happens a lot more and with no debouncing, so in some situations
         // you might have to go back to the change event instead.
         editor.on('selectionchange', function () {
+            refreshPlaceholder();
+        });
+
+        var refreshPlaceholder = function(){
             if ( editor.getContent() === "" ) {
                 tinymce.DOM.addClass(editor.bodyElement, 'empty' );
             } else {
                 tinymce.DOM.removeClass(editor.bodyElement, 'empty' );
             }
-        });
+        }
     }
 };

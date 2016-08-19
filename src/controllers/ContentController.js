@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const StoryService = require('src/services/StoryService');
+const SessService = require('src/services/SessionService');
 
 class Response {
     constructor(title, isAuthenticated, username){
@@ -11,7 +12,7 @@ class Response {
 
 router
 .get('/write', (req, res, next) => {
-    const response = new Response('Write Story', false, '');
+    const response = new Response('Write Story', SessService.isValid(req), '');
     const sess = req.session;
 
     if(!req.session.username){
@@ -25,16 +26,47 @@ router
     res.render('content/write', response);
     next();
 })
+.get('/drafts', (req, res, next) => {
+    const response = new Response('Drafts', SessService.isValid(req), '');
+    const sess = req.session;
+
+    if(!req.session.username){
+        res.redirect('/account/login?next='+req.originalUrl);
+        next();
+        return;
+    }
+    
+    response.author = req.session.username;
+    response.username = req.session.username;
+    res.render('content/drafts', response);
+    next();
+})
+.get('/edit/:id', (req, res, next) => {
+    const response = new Response('Edit', SessService.isValid(req), '');
+    const sess = req.session;
+
+    if(!req.session.username){
+        res.redirect('/account/login?next='+req.originalUrl);
+        next();
+        return;
+    }
+    
+    response.data = {id: req.params.id};
+    response.username = req.session.username;
+    res.render('content/edit', response);
+    next();
+})
 .get('/@+:username', (req, res, next) => {
-    const username = req.params.username;
-    const response = new Response(`Writer: ${username}`, !!req.session.username, username);
+    const author = req.params.username;
+    const response = new Response(`Writer: ${author}`, !!req.session.username, req.session.username);
     const storyService = new StoryService();
 
-    storyService.getPreviews({username: username})
+    storyService.getPreviews({username: author})
                 .subscribe(stories => {
                     if(stories.length < 1){
                         res.status(404).json({error: 'story not found'});
                     } else {
+                        response.author = author;
                         response.data = stories;
                         res.render('content/user', response);
                     }
