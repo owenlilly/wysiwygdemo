@@ -18,7 +18,7 @@
     "mongodb": "^2.2.5",
     "pug": "^2.0.0-beta4",
     "rx": "^4.1.0",
-    "rxmongo": "^0.6.1",
+    "rxmongo": "^0.7.2",
     "sanitize-html": "^1.13.0"
   },
   "devDependencies": {
