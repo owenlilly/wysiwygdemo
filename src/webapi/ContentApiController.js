@@ -137,8 +137,7 @@ router
     
     const storyService = new StoryService();
 
-    storyService.find({username: req.session.username, isDraft: true})
-                .toArray()
+    storyService.getPreviews({username: req.session.username, isDraft: true})
                 .subscribe(drafts => {
                     res.json(drafts);
                 }, error => {
