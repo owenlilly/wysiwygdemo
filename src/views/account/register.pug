@@ -7,6 +7,8 @@ block content
                 h1.text-center Register
                 form.form(action='/account/register', method='post', style='margin-top: 20px;')
                     div.form-group
+                        input.form-control(type='text', name='fullname', placeholder='full name')
+                    div.form-group
                         input.form-control(type='text', name='username', placeholder='username')
                     div.form-group
                         input.form-control(type='email', name='email', placeholder='email')

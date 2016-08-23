@@ -8,11 +8,14 @@
   </div>
   <br style="margin: 0px;"/>
   <h2 style="margin-top: 40px;">{{article.title}}</h2>
-  <div style="color: #5f5f5f">
+  <div style="color: #5f5f5f; margin-bottom: 30px;">
     <p>
-        {{article.preview}}<a href="{{article.url}}">...</a>
+        {{article.preview}}<span ng-show='article.preview.length > 0'>...</span>
     </p>
-    <a href="{{article.url}}">more...</a>
-    <a href="/edit/{{article.id}}" ng-show="vm.username==article.who" class="pull-right">Edit</a>
+    <a href="{{article.url}}" ng-show='article.url.length > 0'>more...</a>
+    <div class="pull-right" ng-show="vm.username==article.who">
+      <a href="/edit/{{article.id}}" style='margin-right: 20px;'>Edit</a>
+      <a href="/delete/{{article.id}}" class="pull-right">Delete</a>
+    </div>
   </div>
 </div>

@@ -7,19 +7,22 @@ mainApp.controller('mainController', function(story) {
 
 	self.getDrafts = function(){
 		var rxDrafts = story.getDrafts();
-		Utils.loadArticlePreviews(rxDrafts)
+		var storyMapper = function(stry){
+			stry.url = '';
+			stry.datePublished = '---';
+			return stry;
+		}
+		Utils.loadArticlePreviews(rxDrafts, storyMapper)
 			 .into(self.articles);
 	}
 
 	self.getLatestPreviews = function(){
-
 		var rxPreviews = story.listSamples();
 		Utils.loadArticlePreviews(rxPreviews)
 			 .into(self.articles);
 	}
 
 	self.getPreviewsByUser = function(username){
-
 		var rxPreviews = story.getPreviews(username);
 		Utils.loadArticlePreviews(rxPreviews)
 			 .into(self.articles);
@@ -63,13 +66,16 @@ var Utils = (function(){
 		sideList.push(new SideItem('Popular Tags', 'Tags other users seem to like.', ['First', 'Second', 'Third']));
 	};
 
-	var loadArticlePreviews = function(rxPreviews){
+	var loadArticlePreviews = function(rxPreviews, storyMapper){
 		return {
 			into: function(previewList) {
 				rxPreviews.flatMap(function(response){
 						return Rx.Observable.from(response.data);
 					})
 					.map(function(story){
+						if(storyMapper){
+							return storyMapper(story);
+						}
 						story.url = story.storyId ? '/@'+story.username+'/'+story.storyId : '#';
 						story.datePublished = moment(story.datePublished, moment.ISO_8601).fromNow();
 						return story;

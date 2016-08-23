@@ -1,14 +1,18 @@
 mainApp.factory('story', function($http){
     var rxPromise = function(promise){
-        return Rx.Observable.create(function(s){
-            promise.then(function(response) {
-                            s.onNext(response);
-                            s.onCompleted();
-                        }, function(error) {
-                            s.onError(error);
-                            s.onCompleted();
-                        });
-        });
+        return Rx.Observable.create(
+            function(s){
+                promise.then(
+                    function(response) {
+                        s.onNext(response);
+                        s.onCompleted();
+                    }, function(error) {
+                        s.onError(error);
+                        s.onCompleted();
+                    }
+                );
+            }
+        );
     };
 
     var rxPost = function(url, data){
@@ -21,14 +25,12 @@ mainApp.factory('story', function($http){
 
     return {
         saveDraft: function(story){
-            story.isDraft = true;
             return rxPost('/api/story/save-draft', story);
         },
         update: function(updates){
             return rxPost('/api/story/update', updates);
         },
         publish: function(story){
-            story.isDraft = false;
             return rxPost('/api/story/publish', story);
         },
         listSamples: function(){
