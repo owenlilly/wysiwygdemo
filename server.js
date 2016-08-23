@@ -38,9 +38,9 @@ app.use(session({
 }));
 
 // controllers
+app.use('/account', accountController);
 app.use('/', homeController);
 app.use('/', contentController);
-app.use('/account', accountController);
 
 // APIs
 app.use('/api', contentApiController);
