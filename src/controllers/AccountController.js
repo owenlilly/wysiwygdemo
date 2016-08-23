@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const RxMongo = require('rxmongo').RxMongo;
 const Rx = require('rx');
+const AccountService = require('src/services/AccountService');
 
 function isEmpty(str) {
     return (!str || str.trim().length < 1);
@@ -67,10 +68,9 @@ router
     responseObj.username = '';
     if(req.query.next){
         responseObj.next = `?next=${req.query.next}`;
-    } else {
-        responseObj.next = '';
     }
 
+    responseObj.next = responseObj.next || '';
     res.render('account/login', responseObj);
     next();
 })
@@ -86,33 +86,39 @@ router
         return;
     }
 
-    const RxCollection = RxMongo.collection('Users');
-
     const responseObj = new Response(false, '', 'Login');
 
-    RxCollection.flatMap(coll => RxMongo.find(coll, {username: req.body.username}))
-                .flatMap(cursor => RxMongo.toArray(cursor))
-                .subscribe(user => {
-                    if(user.length > 0){
-                        req.session.username = req.body.username;
-                        if(qs.next){
-                            res.redirect(qs.next);
-                        } else {
-                            res.redirect('/');
-                        }
-                    } else {
-                        responseObj.hasError = true;
-                        responseObj.message = 'Invalid username or password';
-                        responseObj.username = req.body.username;
-                        res.render('account/login', responseObj);
-                    }
-                }, err => {
-                    responseObj.hasError = true;
-                    responseObj.message = `Oops: ${err}`;
-                    responseObj.username = req.body.username;
-                    res.render('account/login', responseObj);
+    new AccountService()
+    .findByUsername(req.body.username)
+    .subscribe(
+        account => {
+            if(account){
+                if(account.password !== req.body.password){
+                    res.redirect('login');
+                    return;
                 }
-                , () => next());
+
+                req.session.username = account.username;
+                if(qs.next){
+                    res.redirect(qs.next);
+                } else {
+                    res.redirect('/');
+                }
+            } else {
+                responseObj.hasError = true;
+                responseObj.message = 'Invalid username or password';
+                responseObj.username = req.body.username;
+                res.render('account/login', responseObj);
+            }
+        }, 
+        err => {
+            responseObj.hasError = true;
+            responseObj.message = `Oops: ${err}`;
+            responseObj.username = req.body.username;
+            res.render('account/login', responseObj);
+        }, 
+        () => next()
+    );
 })
 .get('/register', (req, res, next) => {
     if(req.session.username){
@@ -142,27 +148,28 @@ router
         next();
         return;
     }
-    
-    const RxCollection = RxMongo.collection('Users');
-    const RxFind = RxCollection.flatMap(coll => RxMongo.find(coll, {username: req.body.username}))
-                                .flatMap(cursor => RxMongo.toArray(cursor));
-    const RxInsert = RxCollection.flatMap(coll => RxMongo.insert(coll, {username: req.body.username, password: req.body.password}));
 
-    RxFind.subscribe(found => {
-        if(found.length === 0){
-            RxInsert.subscribe(result => {
-                res.redirect('/account/login');
-            });
-        } else {
+    const account = {
+        fullname: req.body.fullname,
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email
+    };
+
+    new AccountService()
+    .createUser(account)
+    .subscribe(
+        result => {
+            res.redirect('login');
+            next();
+        }, err => {
             responseObj.hasError = true;
-            responseObj.message = 'Username already in use';
+            responseObj.message = `Error: ${err.message}`;
             res.render('account/register', responseObj);
+        }, () => {
+            next();
         }
-    }, err => {
-        responseObj.hasError = true;
-        responseObj.message = `Error: ${err}`;
-        res.render('account/register', responseObj);
-    }, () => next());
+    );
 })
 .get('/logout', (req, res, next) => {
     let sess = req.session;
