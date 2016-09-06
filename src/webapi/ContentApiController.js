@@ -143,6 +143,27 @@ router
                 }, error => {
                     res.status(500).json({error: error});
                 }, () => next());
+})
+.delete('/story/delete/:id', function(req, res, next){
+    const username = req.session.username;
+    if(!username){
+        res.status(400).json({error: 'login required'});
+        return;
+    }
+
+    const storyService = new StoryService();
+    storyService.deleteById(username, req.params.id)
+                .subscribe(
+                    result => {
+                        console.log(result);
+                        res.json({status: 'done!'});
+                    },
+                    error => {
+                        console.log(error);
+                        res.status(500).json({status: 'error!'});
+                    },
+                    () => next()
+                );
 });
 
 module.exports = router;
