@@ -47,6 +47,17 @@ mainApp.controller('contentController', function(story){
     self.topic = '';
     self.saving = false;
 
+    self.deleteStory = function(id){
+        console.log(id);
+        story.deleteStory(id)
+             .subscribe(function(response){
+                 console.log(response);
+                 window.location = '/';
+             }, function(error){
+                 console.log(error);
+             });
+    }
+
     self.getStoryById = function(id){
         storyId = id;
         rxChangeNotifier = story.update;
