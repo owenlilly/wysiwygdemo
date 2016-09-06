@@ -23,6 +23,10 @@ mainApp.factory('story', function($http){
         return rxPromise($http.get(url));
     };
 
+    var rxDelete = function(url){
+        return rxPromise($http.delete(url));
+    }
+
     return {
         saveDraft: function(story){
             return rxPost('/api/story/save-draft', story);
@@ -47,6 +51,9 @@ mainApp.factory('story', function($http){
         },
         getDrafts: function(){
             return rxGet('/api/story/drafts');
+        },
+        deleteStory: function(id){
+            return rxDelete('/api/story/delete/'+id);
         }
     };
 });
