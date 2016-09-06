@@ -40,6 +40,14 @@ const StoryService = (function(){
                     .single(); // returns Rx.Observable<T>
     }
 
+    StoryService.prototype.deleteOne = function(filter){
+        return this.rxCollection.deleteOne(filter);
+    }
+
+    StoryService.prototype.deleteById = function(username, id) {
+        return this.deleteOne({username: username, _id: ObjectID(id)});
+    }
+
     StoryService.prototype.publish = function(username, draft){
         if(!draft._id){
             throw new Error('cannot publish draft, _id property required.');
