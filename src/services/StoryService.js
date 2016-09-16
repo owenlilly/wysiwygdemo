@@ -35,6 +35,12 @@ const StoryService = (function(){
                     .single();
     }
 
+    StoryService.prototype.getDraft = function(id, username){
+        return new RxCollection('Drafts')
+                    .find({_id: ObjectID(id), username: username})
+                    .single();
+    }
+
     StoryService.prototype.getStory = function(username, storyId){
         return this.find({username: username, storyId: storyId})
                     .single(); // returns Rx.Observable<T>
@@ -54,25 +60,37 @@ const StoryService = (function(){
         }
 
         const now = new Date();
+        const draftId = draft._id;
+        const storyId = `${draft.topic.toLowerCase().replace(new RegExp(' ', 'g'), '-')}-${draftId.slice(-4)}`;;
 
-        draft.username = username;
-        draft.datePublished = now;
-        draft.isDraft = false;
-        draft.storyId = `${draft.topic.toLowerCase().replace(new RegExp(' ', 'g'), '-')}-${draft._id.slice(-4)}`;
+        const draftCollection = new RxCollection('Drafts');
+        const storyCollection = new RxCollection('Stories');
+        const rxFindDraftOrThrow = draftCollection.findOne({_id: ObjectID(draftId), username: username})
+                                                  .filter(d => {
+                                                      if(!d){
+                                                          throw new Error('Draft not found');
+                                                      }
 
-        const collection = RxMongo.collection('Stories');
-        const query = {_id: ObjectID(draft._id), username: username};
-        const rxUpdate = collection.flatMap(coll => RxMongo.updateOne(coll, query, {$set: {
-            isDraft: draft.isDraft,
-            datePublished: draft.datePublished,
+                                                      return true;
+                                                  });
+        const rxSaveStory = storyCollection.insert({
+            datePublished: now,
             topic: sanitizeHtml(draft.topic),
             story: sanitizeHtml(draft.story),
-            username: draft.username,
-            storyId: draft.storyId,
+            username: username,
+            storyId: storyId,
             lastUpdated: now
-        }}));
+        });
+        const rxDeleteDraft = draftCollection.deleteById(draftId);
+        const rxPublishFlow = Rx.Observable.zip(
+            rxFindDraftOrThrow,
+            rxSaveStory,
+            (x, y) => {
+                return rxDeleteDraft;
+            }
+        );
 
-        return rxUpdate;
+        return rxPublishFlow.flatMap(obs => obs);
     }
 
     StoryService.prototype.update = function(username, updated){        
@@ -93,14 +111,14 @@ const StoryService = (function(){
 
     StoryService.prototype.saveDraft = function(username, draft){
         draft.username = username;
-    
-        const collection = RxMongo.collection('Stories');
+        const now = new Date();
+        const collection = RxMongo.collection('Drafts');
         const updateQuery = {_id: ObjectID(draft._id), username: username};
         const rxInsert = collection.flatMap(coll => RxMongo.insert(coll, draft));
         const rxUpdate = collection.flatMap(coll => RxMongo.updateOne(coll, updateQuery, {$set: {
-            isDraft: draft.isDraft,
             topic: sanitizeHtml(draft.topic),
-            story: sanitizeHtml(draft.story)
+            story: sanitizeHtml(draft.story),
+            lastUpdated: now
         }}));
 
         if(!draft._id){
@@ -123,6 +141,32 @@ const StoryService = (function(){
                 }
             },
             { $sort: { datePublished: -1 } }
+        ];
+        const rxAggregate = rxCollection.flatMap(coll => RxMongo.aggregate(coll, aggregation));
+        const rxStripHtmlTags = rxAggregate.flatMap(stories => Rx.Observable.from(stories))
+                                            .map(story => {
+                                                const regex = /(<([^>]+)>)/ig
+                                                story.summary = story.summary.replace(regex, '');
+                                                return story;
+                                            })
+                                            .toArray();
+
+        return rxStripHtmlTags;
+    }
+
+    StoryService.prototype.getDraftPreviews = function(match){
+        const rxCollection = RxMongo.collection('Drafts');
+        const aggregation = [
+            { $match: match },
+            { $project: {
+                    topic: 1,
+                    summary: {$substr: ['$story', 0, 500]},
+                    username: 1,
+                    datePublished: 1,
+                    storyId: 1
+                }
+            },
+            { $sort: { lastUpdated: -1 } }
         ];
         const rxAggregate = rxCollection.flatMap(coll => RxMongo.aggregate(coll, aggregation));
         const rxStripHtmlTags = rxAggregate.flatMap(stories => Rx.Observable.from(stories))

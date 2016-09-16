@@ -9,7 +9,8 @@ mainApp.controller('mainController', function(story) {
 		var article = self.articles[index]; 
         story.deleteStory(article.id)
              .subscribe(function(response){
-				 window.location.reload();
+				 //window.location.reload();
+				 self.articles.splice(index, 1);
              }, function(error){
                  console.log(error);
              });

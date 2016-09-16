@@ -7,11 +7,14 @@
     </div>
   </div>
   <br style="margin: 0px;"/>
-  <h2 style="margin-top: 40px;">{{article.title}}</h2>
-  <div style="color: #5f5f5f;">
-    <p>
-        {{article.preview}}<span ng-show='article.preview.length > 0'>...</span>
-    </p>
+  
+  <div>
+    <a href="{{article.url}}" style="margin-top: 40px; display: block; text-decoration: none; color: #5f5f5f;">
+      <h2 style="color: #3f3f3f;">{{article.title}}</h2>
+      <p>
+          {{article.preview}}<span ng-show='article.preview.length > 0'>...</span>
+      </p>
+    </a>
     <a href="{{article.url}}" ng-show='article.url.length > 0'>more...</a>
     <div class="pull-right" ng-show="vm.username==article.who">
       <a href="/edit/{{article.id}}" style='margin-right: 20px;'>Edit</a>

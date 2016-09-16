@@ -9,7 +9,7 @@ mainApp.controller('mainController', function(story, DraftDto) {
 		var draft = self.drafts[index]; 
         story.deleteStory(draft.id)
              .subscribe(function(response){
-				 window.location.reload();
+				 self.drafts.splice(index, 1);
              }, function(error){
                  console.log(error);
              });

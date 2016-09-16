@@ -11,8 +11,8 @@ block content
                 div.editor.big(ui-tinymce="vm.tinymceStoryOptions", 
                     | ng-model="vm.story", data-placeholder="Story...")
                 br
-                button.btn.btn-default.pull-right(ng-click='vm.publish()', style='margin-left: 10px;') Publish
-                button.btn.btn-default.pull-right(ng-click='vm.saveUpdates()') Save Draft
+                //- button.btn.btn-default.pull-right(ng-click='vm.publish()', style='margin-left: 10px;') Publish
+                button.btn.btn-default.pull-right(ng-click='vm.saveUpdates()') Save
 
 block scripts
     script(src='/libs/rxjs/dist/rx.js')

@@ -15,8 +15,8 @@
     </p>
     <a href="{{draft.url}}" ng-show='draft.url.length > 0'>more...</a>
     <div class="pull-right" ng-show="vm.username==draft.who">
-      <a href="/edit/{{draft.id}}" style='margin-right: 20px;'>Edit</a>
-      <a href="#" ng-click="vm.deleteStory($index)" class="pull-right">Delete</a>
+      <a href="/draft/{{draft.id}}" style='margin-right: 20px;'>Edit</a>
+      <a href="#" ng-click="vm.deleteDraft($index)" class="pull-right">Delete</a>
     </div>
   </div>
 </div>
