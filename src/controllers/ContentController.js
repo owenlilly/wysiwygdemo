@@ -56,6 +56,21 @@ router
     res.render('content/edit', response);
     next();
 })
+.get('/draft/:id', (req, res, next) => {
+    const response = new Response('Draft Edit', SessService.isValid(req), '');
+    const sess = req.session;
+
+    if(!req.session.username){
+        res.redirect('/account/login?next='+req.originalUrl);
+        next();
+        return;
+    }
+    
+    response.data = {id: req.params.id};
+    response.username = req.session.username;
+    res.render('content/draft', response);
+    next();
+})
 .get('/@+:username', (req, res, next) => {
     const author = req.params.username;
     const response = new Response(`Writer: ${author}`, !!req.session.username, req.session.username);
