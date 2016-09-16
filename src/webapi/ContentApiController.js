@@ -19,7 +19,7 @@ router
                         res.json(body);
                     },
                     error => {
-                        res.status(500).json({error: error});
+                        res.status(500).json({error: error.message});
                     },
                     () => next()
                 );
@@ -78,7 +78,7 @@ router
 
     const storyService = new StoryService();
 
-    storyService.getPreviews({isDraft: false})
+    storyService.getPreviews({})
                 .subscribe(
                     stories => {
                         res.json(stories);
@@ -110,7 +110,6 @@ router
 .get('/story/user/:username', function(req, res, next){
 
     const match = {
-        isDraft: false, 
         username: req.params.username
     };
     const storyService = new StoryService();
@@ -137,12 +136,31 @@ router
     
     const storyService = new StoryService();
 
-    storyService.getPreviews({username: req.session.username, isDraft: true})
+    storyService.getDraftPreviews({username: req.session.username, isDraft: true})
                 .subscribe(drafts => {
                     res.json(drafts);
                 }, error => {
                     res.status(500).json({error: error});
                 }, () => next());
+})
+.get('/story/draft/:id', function(req, res, next) {
+
+    const storyService = new StoryService();
+
+    storyService.getDraft(req.params.id, req.session.username)
+                .subscribe(
+                    story => {
+                        if(!story){
+                            res.status(404).json({error: `Story not found for id ${req.params.id}`});
+                            return;
+                        }
+                        res.json(story);
+                    },
+                    error => {
+                        res.status(500).json({error: error});
+                    },
+                    () => next()
+                );
 })
 .delete('/story/delete/:id', function(req, res, next){
     const username = req.session.username;

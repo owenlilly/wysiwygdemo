@@ -71,6 +71,19 @@ mainApp.controller('contentController', function(story){
                 });
 	}
 
+    self.getDraftById = function(id){
+        storyId = id;
+        rxChangeNotifier = story.update;
+		story.getDraftById(id)
+                .subscribe(function(response){
+                    var s = response.data;
+                    self.topic = s.topic;
+                    self.story = s.story;
+                }, function(err){
+                    console.log(err);
+                });
+	}
+
     self.tinymceTopicOptions = { 
         menubar: false,
         inline: true,

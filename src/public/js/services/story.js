@@ -46,6 +46,9 @@ mainApp.factory('story', function($http){
         getById: function(id){
             return rxGet('/api/story/byid/'+id);
         },
+        getDraftById: function(id){
+            return rxGet('/api/story/draft/'+id);
+        },
         getStory: function(username, storyId){
             return rxGet('/@'+username+'/'+storyId);
         },
