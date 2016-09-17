@@ -17,12 +17,7 @@ mainApp.controller('mainController', function(story, DraftDto) {
 
 	self.getDrafts = function(){
 		var rxDrafts = story.getDrafts();
-		var storyMapper = function(stry){
-			stry.url = '';
-			stry.datePublished = '---';
-			return stry;
-		}
-		Utils.loadDraftPreviews(rxDrafts, storyMapper, DraftDto)
+		Utils.loadDraftPreviews(rxDrafts, DraftDto)
 			 .into(self.drafts);
 	}
 })
@@ -33,22 +28,19 @@ mainApp.controller('mainController', function(story, DraftDto) {
 });
 
 var Utils = (function(){
-	var loadArticlePreviews = function(rxPreviews, storyMapper, DraftDto){
+	var loadArticlePreviews = function(rxPreviews, DraftDto){
 		return {
 			into: function(previewList) {
 				rxPreviews.flatMap(function(response){
 						return Rx.Observable.from(response.data);
 					})
 					.map(function(story){
-						if(storyMapper){
-							return storyMapper(story);
-						}
-						story.url = story.storyId ? '/@'+story.username+'/'+story.storyId : '#';
-						story.datePublished = moment(story.datePublished, moment.ISO_8601).fromNow();
+						story.url = '';
+						story.lastUpdated = moment(story.lastUpdated, moment.ISO_8601).fromNow();
 						return story;
 					})
 					.map(function(story){
-						return new DraftDto(story._id, story.username, story.datePublished, story.topic, story.summary, story.url);
+						return new DraftDto(story._id, story.username, story.lastUpdated, story.topic, story.summary, story.url);
 					})
 					.subscribe(function(draft){
 						previewList.push(draft);

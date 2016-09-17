@@ -122,6 +122,20 @@ mainApp.controller('contentController', function(story){
         );
     };
 
+    self.saveDraft = function(){
+        story.update(storyProvider())
+            .subscribe(
+            function(response){
+                console.log(response.data);
+                window.location = '/drafts';
+            },
+            function(error){
+                console.log('error');
+                console.log(error);
+            }
+        );
+    }
+
     self.saveUpdates = function(){
         story.update(storyProvider())
             .subscribe(

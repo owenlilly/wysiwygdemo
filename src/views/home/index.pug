@@ -3,7 +3,7 @@ extends ./../_layout.pug
 block content
 	div(ng-controller='mainController as vm')
 		div.row(ng-init='vm.username="'+username+'"')
-			div.col-md-9(ng-init='vm.getLatestPreviews()')
+			div.col-md-9(ng-init='vm.getLatestPreviews()', style='padding-bottom: 20px;')
 				articles(ng-repeat="article in vm.articles")
 			div.col-md-3
 				div(style='margin-top: 20px;', ng-repeat='sideItem in vm.sideItems')

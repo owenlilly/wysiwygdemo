@@ -9,7 +9,6 @@ mainApp.controller('mainController', function(story) {
 		var article = self.articles[index]; 
         story.deleteStory(article.id)
              .subscribe(function(response){
-				 //window.location.reload();
 				 self.articles.splice(index, 1);
              }, function(error){
                  console.log(error);
@@ -49,14 +48,15 @@ var Utils = (function(){
 		};
 	}
 
-	var Article = function(id, who, when, title, preview, url){
+	var Article = function(id, who, when, title, preview, url, author){
 		return {
 			id: id,
 			who: who,
 			when: when,
 			title: title,
 			preview: preview,
-			url
+			url,
+			author
 		};
 	}
 
@@ -78,8 +78,7 @@ var Utils = (function(){
 						return story;
 					})
 					.map(function(story){
-						//console.log(story);
-						return new Article(story._id, story.username, story.datePublished, story.topic, story.summary, story.url);
+						return new Article(story._id, story.username, story.datePublished, story.topic, story.summary, story.url, story.author);
 					})
 					.subscribe(function(article){
 						previewList.push(article);
