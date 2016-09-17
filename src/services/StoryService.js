@@ -16,12 +16,58 @@ const StoryService = (function(){
     }
 
     StoryService.prototype.getStories = function(){
-        return this.find({})
+        const lookup = [
+                            {
+                                $lookup: {
+                                    from: "Users",
+                                    localField: "username",
+                                    foreignField: "username",
+                                    as: "author"
+                                }
+                            },
+                            {
+                                $unwind: "$author"
+                            },
+                            {
+                                $project: {
+                                    datePublished: 1,
+                                    topic: 1,
+                                    story:  1,
+                                    username: 1,
+                                    storyId: 1,
+                                    lastUpdated: 1,
+                                    author: "$author.fullname"
+                                }
+                            }
+                        ];
+        return this.aggregate(lookup)
                     .toArray(); // returns RxArray
     }
 
     StoryService.prototype.getStories = function(username){
-        return this.find({username: username})
+        const lookup = [
+            { $match: { username: username } },
+            { $lookup: {
+                    from: "Users",
+                    localField: "username",
+                    foreignField: "username",
+                    as: "author"
+                }
+            },
+            { $unwind: "$author" },
+            { $project: {
+                    datePublished: 1,
+                    topic: 1,
+                    story:  1,
+                    username: 1,
+                    storyId: 1,
+                    lastUpdated: 1,
+                    author: "$author.fullname"
+                }
+            }
+        ];
+
+        return this.aggregate(lookup)
                     .toArray(); // returns RxArray
     }
 
@@ -132,12 +178,21 @@ const StoryService = (function(){
         const rxCollection = RxMongo.collection('Stories');
         const aggregation = [
             { $match: match },
+            { $lookup: {
+                    from: "Users",
+                    localField: "username",
+                    foreignField: "username",
+                    as: "author"
+                }
+            },
+            { $unwind: "$author" },
             { $project: {
                     topic: 1,
                     summary: {$substr: ['$story', 0, 500]},
                     username: 1,
                     datePublished: 1,
-                    storyId: 1
+                    storyId: 1,
+                    author: "$author.fullname"
                 }
             },
             { $sort: { datePublished: -1 } }
@@ -162,7 +217,7 @@ const StoryService = (function(){
                     topic: 1,
                     summary: {$substr: ['$story', 0, 500]},
                     username: 1,
-                    datePublished: 1,
+                    lastUpdated: 1,
                     storyId: 1
                 }
             },

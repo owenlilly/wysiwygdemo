@@ -52,7 +52,6 @@ router
 
     const storyService = new StoryService();
     let body = req.body;
-    body.isDraft = true;
 
     storyService.saveDraft(sess.username, body)
         .subscribe(result => {
@@ -136,8 +135,9 @@ router
     
     const storyService = new StoryService();
 
-    storyService.getDraftPreviews({username: req.session.username, isDraft: true})
+    storyService.getDraftPreviews({username: req.session.username})
                 .subscribe(drafts => {
+                    console.log(drafts);
                     res.json(drafts);
                 }, error => {
                     res.status(500).json({error: error});
