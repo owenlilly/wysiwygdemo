@@ -9,11 +9,9 @@ class Response {
 }
 
 router
-.get('/', (req, res, next) => { 
+.get('/', (req, res, next) => {
     const response = new Response('Home', false, '');
-
-    let sess = req.session;
-
+    
     if(req.session.username){
         response.isAuthenticated = true;
         response.username = req.session.username;

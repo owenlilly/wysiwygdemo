@@ -17,29 +17,25 @@ const StoryService = (function(){
 
     StoryService.prototype.getStories = function(){
         const lookup = [
-                            {
-                                $lookup: {
-                                    from: "Users",
-                                    localField: "username",
-                                    foreignField: "username",
-                                    as: "author"
-                                }
-                            },
-                            {
-                                $unwind: "$author"
-                            },
-                            {
-                                $project: {
-                                    datePublished: 1,
-                                    topic: 1,
-                                    story:  1,
-                                    username: 1,
-                                    storyId: 1,
-                                    lastUpdated: 1,
-                                    author: "$author.fullname"
-                                }
-                            }
-                        ];
+            { $lookup: {
+                    from: "Users",
+                    localField: "username",
+                    foreignField: "username",
+                    as: "author"
+                }
+            },
+            { $unwind: "$author" },
+            { $project: {
+                    datePublished: 1,
+                    topic: 1,
+                    story:  1,
+                    username: 1,
+                    storyId: 1,
+                    lastUpdated: 1,
+                    author: "$author.fullname"
+                }
+            }
+        ];
         return this.aggregate(lookup)
                     .toArray(); // returns RxArray
     }

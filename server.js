@@ -8,10 +8,11 @@ const express    = require('express'),
 	  homeController = require('src/controllers/HomeController'),
 	  accountController = require('src/controllers/AccountController'),
 	  contentController = require('src/controllers/ContentController'),
-      contentApiController = require('src/webapi/contentApiController'),
+      profileController = require('src/controllers/ProfileController'),
+      contentApiController = require('src/webapi/contentApiController'), 
       MongoDBStore = require('connect-mongodb-session')(session);
 
-const mongoUrl = 'mongodb://localhost/findit';
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/findit';
 
 const store = new MongoDBStore({ 
     uri: mongoUrl,
@@ -39,6 +40,7 @@ app.use(session({
 
 // controllers
 app.use('/account', accountController);
+app.use('/profile', profileController);
 app.use('/', homeController);
 app.use('/', contentController);
 
