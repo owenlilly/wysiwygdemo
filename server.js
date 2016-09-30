@@ -27,6 +27,7 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/src/public`));
+app.use(express.static(`${__dirname}/src/public/libs`));
 app.use(session({
     secret: '9D59516154098C8BFFCABDFB261646BC210F37F77D4A3D8C23654FC480DDCD88',
     resave: false,
