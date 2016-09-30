@@ -11,8 +11,7 @@ class Response {
 router
 .get('/:username', (req, res, next) => {
     
-    let sess = req.session;
-
+    const sess = req.session;
     const response = new Response('Profile', false, '');
     
     if(sess && sess.username){
