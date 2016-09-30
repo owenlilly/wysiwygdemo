@@ -9,7 +9,7 @@ const express    = require('express'),
 	  accountController = require('src/controllers/AccountController'),
 	  contentController = require('src/controllers/ContentController'),
       profileController = require('src/controllers/ProfileController'),
-      contentApiController = require('src/webapi/contentApiController'), 
+      contentApiController = require('src/webapi/ContentApiController'), 
       MongoDBStore = require('connect-mongodb-session')(session);
 
 const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/findit';
