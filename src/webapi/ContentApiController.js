@@ -137,7 +137,7 @@ router
 
     storyService.getDraftPreviews({username: req.session.username})
                 .subscribe(drafts => {
-                    console.log(drafts);
+                    //console.log(drafts);
                     res.json(drafts);
                 }, error => {
                     res.status(500).json({error: error});
@@ -173,11 +173,11 @@ router
     storyService.deleteById(username, req.params.id)
                 .subscribe(
                     result => {
-                        console.log(result);
+                        //console.log(result);
                         res.json({status: 'done!'});
                     },
                     error => {
-                        console.log(error);
+                        //console.log(error);
                         res.status(500).json({status: 'error!'});
                     },
                     () => next()
